@@ -1,0 +1,1348 @@
+leetcode# 232. Implement Queue using Stacks
+class MyQueue:
+
+    def __init__(self):
+        self.s1 = []
+        self.s2 = []
+        
+
+    def push(self, x: int) -> None:
+        self.s1.append(x)
+        
+        
+
+    def pop(self) -> int:
+        
+        if not self.s2:
+            self.peek()
+        return self.s2.pop()
+        
+
+    def peek(self) -> int:
+        if not self.s2:
+            while self.s1:
+                self.s2.append(self.s1.pop())
+        return self.s2[-1]
+        
+
+    def empty(self) -> bool:
+        return not self.s1 and not self.s2
+        
+        
+        
+
+
+# Your MyQueue object will be instantiated and called as such:
+# obj = MyQueue()
+# obj.push(x)
+# param_2 = obj.pop()
+# param_3 = obj.peek()
+# param_4 = obj.empty()
+
+
+
+leetcode#144. Binary Tree Preorder Traversal
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    
+    
+    
+    def preorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        if not root:
+            return []
+        
+        res=[]
+        stack=[root]
+        
+        while stack:
+            root = stack.pop()
+            res.append(root.val)
+            if root.right is not None:
+                stack.append(root.right)
+            if root.left is not None:
+                stack.append(root.left)
+
+leetcode# 94. Binary Tree Inorder Traversal
+class Solution:
+    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        
+        # stack=[1,2,]
+        # res = [4]
+        if not root:
+            return []
+        
+        res=[]
+        stack=[]
+        
+        while root or stack:
+            
+            while root:
+                stack.append(root)
+                root = root.left
+            
+            root = stack.pop()
+            res.append(root.val)
+            root = root.right
+        
+        return res
+        return res
+
+
+
+
+
+leetcode#145. Binary Tree Postorder Traversal
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def postorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        if not root:
+            return []
+        
+        stack = [root]
+        res = []
+        pre = None
+        curr = root
+        
+        while stack:
+            curr = stack[-1]
+            if pre==None or curr == pre.left or curr == pre.right:
+                if curr.left is not None:
+                    stack.append(curr.left)
+                elif curr.right is not None:
+                    stack.append(curr.right)
+                else:
+                    res.append(stack.pop().val)
+            
+            elif pre == curr.left:
+                if curr.right is not None:
+                    stack.append(curr.right)
+                else:
+                    res.append(stack.pop().val)
+            
+            else: # pre ==curr.right
+                res.append(stack.pop().val)
+            
+            pre=curr
+
+
+leetcode#102. Binary Tree Level Order Traversal
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+        
+        if root is None:
+            return []
+        
+        queue = collections.deque()
+        queue.append(root)
+        
+        res=[]
+        
+        while queue:
+            level=[]
+            qlen = len(queue)
+            for i in range(qlen):
+                root = queue.popleft()
+                level.append(root.val)
+                if root.left:
+                    queue.append(root.left)
+                if root.right:
+                    queue.append(root.right)
+            res.append(level)
+
+        return res
+ 
+
+101. Symmetric Tree
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def isSymmetric(self, root: Optional[TreeNode]) -> bool:
+        q=collections.deque()
+        q.append(root)
+        q.append(root)
+        
+        while q:
+            t1 = q.popleft()
+            t2 = q.popleft()
+            
+            if t1==None and t2==None:
+                continue
+            if t1==None or t2==None:
+                return False
+            if t1.val != t2.val:
+                return False
+            q.append(t1.left)
+            q.append(t2.right)
+            q.append(t1.right)
+            q.append(t2.left)
+
+
+226. Invert Binary Tree
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if root is None:
+            return root
+        
+        q = collections.deque()
+        q.append(root)
+        
+        while q:
+            node = q.popleft()
+            
+            if node.left:
+                q.append(node.left)
+            if node.right:
+                q.append(node.right)
+            
+            node.left,node.right = node.right,node.left
+            
+        return root
+
+112. Path Sum
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def hasPathSum(self, root: Optional[TreeNode], targetSum: int) -> bool:
+        if root is None:
+            return False
+         
+        stack=[[root,targetSum-root.val]]
+        
+        while stack:
+            node = stack.pop()
+            
+            if node[0].left is None and node[0].right is None and node[1] == 0:
+                return True
+            
+            if node[0].right:
+                stack.append([node[0].right,node[1]-node[0].right.val])
+                
+            if node[0].left:
+                stack.append([node[0].left,node[1]-node[0].left.val])
+
+
+567. Permutation in String
+
+class Solution:
+    def checkInclusion(self, s1: str, s2: str) -> bool:
+        m=len(s1)
+        n=len(s2)
+        
+        if m>n:
+            return False
+        hm1={}
+        hm2={}
+        for i in range(m):
+            if s1[i] not in hm1:
+                hm1[s1[i]]=1
+            else:
+                hm1[s1[i]]+=1
+        
+        for i in range(m):
+            if s2[i] not in hm2:
+                hm2[s2[i]]=1
+            else:
+                hm2[s2[i]]+=1
+        
+        start=0
+        end=m-1
+        while hm1 != hm2 and end<n:
+            if hm2[s2[start]]>1:
+                hm2[s2[start]]-=1
+            else:
+                hm2.pop(s2[start],None)
+            start+=1
+            end+=1
+            if end == n:
+                break
+            if s2[end] not in hm2:
+                hm2[s2[end]]=1
+            else:
+                hm2[s2[end]]+=1
+            
+        if hm1==hm2:
+            return True
+        else:
+            return False
+
+
+733. Flood Fill
+
+class Solution:
+    def floodFill(self, image: List[List[int]], sr: int, sc: int, newColor: int) -> List[List[int]]:
+        
+        visit=set()
+        target= image[sr][sc]
+        if target==newColor: return image
+        def bfs(image,r,c,newColor,visit,target):
+            while 0<=r<len(image) and 0<=c<len(image[0]) and (r,c) not in visit:
+                visit.add((r,c))
+                if image[r][c] == target:
+                    image[r][c]=newColor
+                    bfs(image,r+1,c,newColor,visit,target)
+                    bfs(image,r-1,c,newColor,visit,target)
+                    bfs(image,r,c+1,newColor,visit,target)
+                    bfs(image,r,c-1,newColor,visit,target)        
+            
+        bfs(image,sr,sc,newColor,visit,target)
+        
+        return image
+        
+
+class Solution(object):
+    def floodFill(self, image, sr, sc, newColor):
+        R, C = len(image), len(image[0])
+        color = image[sr][sc]
+        if color == newColor: return image
+        def dfs(r, c):
+            if image[r][c] == color:
+                image[r][c] = newColor
+                if r >= 1: dfs(r-1, c)
+                if r+1 < R: dfs(r+1, c)
+                if c >= 1: dfs(r, c-1)
+                if c+1 < C: dfs(r, c+1)
+
+        dfs(sr, sc)
+        return image
+        return False
+        
+        return True
+            
+        return res
+
+695. Max Area of Island
+class Solution:
+    def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
+        
+        m=len(grid)
+        n=len(grid[0])
+        visit=set()
+        max_area=0
+        def bfs(grid,r,c,visit,area):
+            while 0<=r<len(grid) and 0<=c<len(grid[0]) and (r,c) not in visit and grid[r][c]==1:
+                visit.add((r,c))
+                area +=1
+                area = bfs(grid,r-1,c,visit,area)
+                area = bfs(grid,r+1,c,visit,area)
+                area = bfs(grid,r,c-1,visit,area)
+                area = bfs(grid,r,c+1,visit,area)
+            return area
+            
+        for r in range(m):
+            for c in range(n):
+                if grid[r][c]==1 and (r,c) not in visit:
+                    max_area = max(bfs(grid,r,c,visit,0),max_area)
+        
+        return max_area
+
+class Solution(object):
+    def maxAreaOfIsland(self, grid):
+        seen = set()
+        def area(r, c):
+            if not (0 <= r < len(grid) and 0 <= c < len(grid[0])
+                    and (r, c) not in seen and grid[r][c]):
+                return 0
+            seen.add((r, c))
+            return (1 + area(r+1, c) + area(r-1, c) +
+                    area(r, c-1) + area(r, c+1))
+
+        return max(area(r, c)
+                   for r in range(len(grid))
+                   for c in range(len(grid[0])))
+
+
+617. Merge Two Binary Trees
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def mergeTrees(self, root1: Optional[TreeNode], root2: Optional[TreeNode]) -> Optional[TreeNode]:
+        
+        
+        if not root2:
+            return root1
+        if not root1:
+            return root2
+        
+        stack = []
+        stack.append((root1,root2))
+        
+        while stack:
+            node = stack.pop()
+            node[0].val+=node[1].val
+            
+            
+            if node[0].right and node[1].right:
+                stack.append((node[0].right,node[1].right))
+            if node[0].left and node[1].left:
+                stack.append((node[0].left,node[1].left))
+            
+            if not node[0].left:
+                node[0].left = node[1].left
+            
+            if not node[0].right:
+                node[0].right = node[1].right
+                
+        return root1
+
+
+116. Populating Next Right Pointers in Each Node
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val: int = 0, left: 'Node' = None, right: 'Node' = None, next: 'Node' = None):
+        self.val = val
+        self.left = left
+        self.right = right
+        self.next = next
+"""
+
+class Solution:
+    def connect(self, root: 'Optional[Node]') -> 'Optional[Node]':
+        if not root:
+            return None
+        
+        
+        
+        stack = []
+        stack.append([root])
+        
+        while stack[0]:
+            
+            nodes = stack.pop()
+            node = []
+            length = len(nodes)
+            for i in range(length):
+                if i == (length-1):
+                    nodes[i].next = None
+                else:
+                    nodes[i].next = nodes[i+1]
+        
+                if nodes[i].left:
+                    node.append(nodes[i].left)
+                    node.append(nodes[i].right)
+                
+            stack.append(node)
+        
+    
+        return root
+
+
+class Solution:
+    def connect(self, root: 'Optional[Node]') -> 'Optional[Node]':
+        if not root:
+            return None
+        
+        q = collections.deque()
+        q.append(root)
+        
+        while q:
+            
+            length = len(q)
+            
+            for i in range(length):
+                node = q.popleft()
+                if i == length-1:
+                    node.next = None
+                else:
+                    node.next = q[0]
+                if node.left:
+                    q.append(node.left)
+                    q.append(node.right)
+            
+        return root
+
+
+701. Insert into a Binary Search Tree
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def insertIntoBST(self, root: Optional[TreeNode], val: int) -> Optional[TreeNode]:
+        
+        if not root:
+            return TreeNode(val)
+        
+        node = root
+        while node:
+            
+            if not node.left and val<node.val:
+                node.left = TreeNode(val)
+                return root
+            
+            if not node.right and val>node.val:
+                node.right = TreeNode(val)
+                return root
+            
+            if val>node.val:
+                node = node.right
+            else:
+                node = node.left
+            
+        return root
+
+
+98. Validate Binary Search Tree
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def isValidBST(self, root: Optional[TreeNode]) -> bool:
+        
+        stack = [root]
+        high = math.inf
+        low = -math.inf
+        stack = [(root,low,high)]
+        while stack:
+            node,low,high = stack.pop()
+            
+            if node.val>=high or node.val<=low:
+                return False
+            
+            if node.left:
+                stack.append((node.left,low,node.val))
+            
+            if node.right:
+                stack.append((node.right,node.val,high))
+            
+        return True
+
+
+
+// inorder approach
+class Solution:
+    def isValidBST(self, root: Optional[TreeNode]) -> bool:
+        
+        pre = -math.inf
+        stack=[]
+        while stack or root:
+            while root:
+                stack.append(root)
+                root = root.left
+            
+            root = stack.pop()
+            
+            if root.val <= pre:
+                return False
+            
+            pre = root.val
+            root = root.right
+        return True
+
+
+
+653. Two Sum IV - Input is a BST
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def findTarget(self, root: Optional[TreeNode], k: int) -> bool:
+        
+        hm = set()
+        stack = [root]
+        while stack:
+            node = stack.pop()
+            if (k-node.val) in hm:
+                return True
+            else:
+                hm.add(node.val)
+            
+            if node.right:
+                stack.append(node.right)
+            if node.left:
+                stack.append(node.left)
+            
+        return False
+    
+
+
+
+
+235. Lowest Common Ancestor of a Binary Search Tree
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        
+        while root:
+            if p.val > root.val and q.val > root.val:
+                root =root.right
+            elif p.val < root.val and q.val < root.val:
+                root = root.left
+
+            else:
+                return root
+            
+
+
+
+542. 01 Matrix
+
+class Solution:
+    def updateMatrix(self, mat: List[List[int]]) -> List[List[int]]:
+        
+        m=len(mat)
+        n=len(mat[0])
+        
+        for r in range(m):
+            for c in range(n):
+                if mat[r][c]:
+                    left = mat[r][c-1] if c-1>=0 else float('inf')
+                    top= mat[r-1][c] if r-1>=0 else float('inf')
+                    mat[r][c] = min(left,top)+1
+        
+        
+        for r in range(m-1,-1,-1):
+            for c in range(n-1,-1,-1):
+                if mat[r][c]:
+                    right = mat[r][c+1] if c+1<n else float('inf')
+                    down= mat[r+1][c] if r+1<m else float('inf')
+                    mat[r][c] = min(min(right,down)+1,mat[r][c])
+                    
+                    
+        return mat
+
+
+
+
+994. Rotting Oranges
+
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        
+        m=len(grid)
+        n= len(grid[0])
+        time=0
+        fresh=0
+        q=collections.deque()
+        
+        for r in range(m):
+            for c in range(n):
+                if grid[r][c]==1:
+                    fresh+=1
+                if grid[r][c]==2:
+                    q.append([r,c])
+                           
+        direction = [[0,1],[0,-1],[1,0],[-1,0]]            
+        while q and fresh:
+            
+            for i in range(len(q)):
+                r,c = q.popleft()
+                for dr,dc in direction:
+                    if 0<=r+dr<m and 0<=c+dc<n and grid[r+dr][c+dc]==1:
+                        grid[r+dr][c+dc]=2
+                        fresh-=1
+                        q.append([r+dr,c+dc])
+            time+=1
+            
+        return time if fresh==0 else -1
+
+
+190. Reverse Bits
+class Solution:
+    def reverseBits(self, n: int) -> int:
+        
+        if n == 0 :
+            return 0
+        
+        res = 0
+        
+        for i in range(32):
+            res<<=1
+            
+            if n&1 == 1 :  # to check if the last digit of n is 1.  
+                res+=1
+            
+            n>>=1
+        return res
+
+136. Single Number
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        
+        hm = {}
+        for i in range(len(nums)):
+            if nums[i] not in hm:
+                hm[nums[i]]=1
+            else:
+                hm[nums[i]]+=1
+        
+        for i in hm:
+            if hm[i]==1:
+                return i
+
+740. Delete and Earn
+class Solution:
+    def deleteAndEarn(self, nums: List[int]) -> int:
+        
+        array = [0 for i in range(max(nums)+1)]
+        for n in nums:
+            array[n] += n
+        
+        first = 0
+        second = 0
+        
+        for i in range(len(array)):
+            res = max(first+array[i],second)
+            first = second
+            second = res
+        
+        return res
+
+
+
+55. Jump Game
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        
+        memo = [0 for i in range(len(nums))]
+        memo[-1] = 1
+        for i in range(len(nums)-2,-1,-1):
+            
+            for j in range(nums[i]):
+                if memo[i+j+1] ==1:
+                    memo[i] = 1
+                    break
+                    
+        if memo[0] ==1:
+            return True
+        else:
+            return False
+
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+
+        m=len(nums)
+        good = m-1
+        
+        for i in range(len(nums)-2,-1,-1):
+            res = nums[i]+i
+            if res >= good:
+                good = i
+        
+        return good == 0
+
+
+
+45. Jump Game II
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        
+        m=len(nums)
+        memo = [-1 for i in range(m)]
+        memo[-1] = 0
+        
+        for i in range(m-2,-1,-1):
+            mini = float('inf')
+            for j in range(1,nums[i]+1):
+                index = i+j
+                if index<=m-1:
+                    if memo[index]!=-1:
+                        mini = min(1+memo[index],mini)
+                        memo[i] = mini
+                else:
+                    break
+            
+        
+        return memo[0]
+
+
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        
+        m = len(nums)
+        l=r=0
+        jumps=0
+        while r<m-1:
+            farthest = 0
+            for i in range(l,r+1):
+                farthest = max(farthest,nums[i]+i)
+                
+            l = r+1
+            r = farthest
+            jumps+=1
+            
+        return jumps
+
+
+152. Maximum Product Subarray
+class Solution:
+    def maxProduct(self, nums: List[int]) -> int:
+        
+        m = len(nums)
+        max_sofar=1
+        min_sofar=1
+        res=-float('inf')
+        
+        for i in range(m):
+            cur = nums[i]
+            temp = max_sofar
+            max_sofar = max(cur,cur*max_sofar,cur*min_sofar)
+            min_sofar = min(cur,cur*temp,cur*min_sofar)
+            res = max(max_sofar,res)
+            
+        return res
+
+
+#follow up question:  find the index of subarray
+def maxProduct(nums):
+    
+    m = len(nums)
+    max_sofar=1
+    min_sofar=1
+    res=-float('inf')
+    end_index = 0
+    
+    for i in range(m):
+        cur = nums[i]
+        temp = max_sofar
+        max_sofar = max(cur,cur*max_sofar,cur*min_sofar)
+        min_sofar = min(cur,cur*temp,cur*min_sofar)
+        if max_sofar>res:
+            res = max_sofar
+            end_index = i
+    
+    cur =1
+    start_index=0
+    for i in range(end_index,-1,-1):
+        cur *= nums[i]
+        if cur == res:
+            start_index = i
+            break
+    
+    return [res,start_index,end_index]
+
+
+1567. Maximum Length of Subarray With Positive Product
+# we want to keep track the total number of positives till end and start from 0 index
+# we also want to keep track the total number of positives till end, after first negative number
+class Solution:
+    def getMaxLen(self, nums: List[int]) -> int:
+        
+        
+        pos_len = 0  # number of positives + even number of negatives
+        neg_len = 0  # number of positives + odd number of negatives
+        res = 0
+        
+        m = len(nums)
+        
+        for i in range(m):
+            if nums[i] > 0:   # if we see a positive number, we increase pos by 1, 
+                pos_len+=1
+                neg_len+=0 if neg_len ==0 else 1  # we increase neg by 1 unless we did not see neg before
+            
+            elif nums[i] <0:
+                temp = pos_len
+                pos_len = neg_len if neg_len == 0 else neg_len+1
+                neg_len = temp+1
+                
+            else:
+                pos_len = 0
+                neg_len = 0
+            
+            res = max(res,pos_len)
+        
+        return res
+
+
+
+
+1014. Best Sightseeing Pair
+#we want to get the max value of A[i]+i + A[j]-j, where i<j, so we need to keep record of the previous
+best index which can make the max A[i]+i.
+class Solution:
+    def maxScoreSightseeingPair(self, values: List[int]) -> int:
+        
+        max_i=values[0]
+        res = -float('inf')
+        
+        for j in range(1,len(values)):
+            res = max(res,max_i+values[j]-j) 
+            max_i = max(max_i,values[j]+j)
+        return res
+
+
+
+122. Best Time to Buy and Sell Stock II
+# ex: [1,2,3,4,5] profit = 5-1=4 or (2-1)+(3-2)+(4-3)+(5-4) = 4
+# ex: [5,4,3,2,1] profit = 0
+# ex: [1,3,2,4,5] profit = (3-1) + (4-2) + (5-4) = 5
+# add every differnce, if sell>buy
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        
+        buy =prices[0]
+        sell=prices[0] 
+        res = 0
+        for i in range(1,len(prices)):
+            
+            sell = prices[i]
+            
+            if sell> buy:
+                res+=(sell-buy)
+                
+            buy = prices[i]
+        return res
+
+
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        
+        m = len(prices)
+        dp_i_0 = 0             # profit at index i, without stock at hand
+        dp_i_1 = -prices[0]    # profit at index i, with stock at hand
+        
+        for i in range(1,m):
+            temp = dp_i_0
+            dp_i_0 = max(dp_i_0,dp_i_1+prices[i])
+            dp_i_1 = max(temp-prices[i],dp_i_1)
+            
+        return dp_i_0
+
+
+123. Best Time to Buy and Sell Stock III
+# tip: divde a sequence into two subsequence, the total profit would be the sum of profits from each subsequence.
+# tip: think about brute force
+# eg:   7 1 5 3 6 4
+#       5 5 3 3 0 0 0 <- r_res
+#l_res->0 0 4 4 5 5
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        
+        n= len(prices)
+        l_res = [0 for i in range(n)]
+        r_res = [0 for i in range(n+1)]
+        
+        
+        left_min = prices[0]
+        right_max = prices[n-1]
+        
+        for i in range(1,n):
+            left_max = prices[i]
+            l_res[i]= max(l_res[i-1],left_max-left_min)  # update when sell>buy
+            left_min = min(left_min,prices[i])
+            
+            right_min = prices[n-1-i]
+            r_res[n-1-i] = max(r_res[n-i],right_max-right_min) # update when sell>buy
+            right_max = max(right_max,prices[n-1-i])
+        
+        res=0
+        for i in range(n):
+            res = max(l_res[i]+r_res[i+1],res)
+            
+        return res
+
+
+'''
+Here, the oneBuy keeps track of the lowest price, and oneBuyOneSell keeps track of the biggest profit we could get.
+Then the tricky part comes, how to handle the twoBuy? Suppose in real life, you have bought and sold a stock and made $100 dollar profit. When you want to purchase a stock which costs you $300 dollars, how would you think this? You must think, um, I have made $100 profit, so I think this $300 dollar stock is worth $200 FOR ME since I have hold $100 for free.
+There we go, you got the idea how we calculate twoBuy!! We just minimize the cost again!! The twoBuyTwoSell is just making as much profit as possible.
+'''
+
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        
+        n = len(prices)
+        buy1 = float('inf')
+        profit1 = 0
+        buy2 = float('inf')
+        profit2 = 0
+        
+        
+        for i in range(n):
+            p = prices[i]
+            buy1 = min(buy1,p)
+            profit1 = max(profit1,p-buy1)
+            
+            buy2 = min(buy2,p-profit1)
+            profit2 = max(profit2,p-buy2)
+        
+        return profit2
+
+
+
+
+188. Best Time to Buy and Sell Stock IV
+class Solution:
+    def maxProfit(self, k: int, prices: List[int]) -> int:
+        
+        if k==0:
+            return 0
+    
+        buys=[float('inf') for i in range(k)]
+        profits=[0 for i in range(k)]
+        
+        for i in range(len(prices)):
+            p=prices[i]
+            buys[0] = min(buys[0],p)
+            profits[0] = max(profits[0],p-buys[0])
+            for i in range(1,k):
+                buys[i]=min(buys[i],p-profits[i-1])
+                profits[i] = max(profits[i],p-buys[i])
+                
+            
+        return profits[k-1]
+
+
+309. Best Time to Buy and Sell Stock with Cooldown
+# time: O(2n)
+# space:O(2n) dp={} # key:(index,state) we have two state for each indexs
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        
+        dp={} # key:(index,state) val: maximum profit
+        
+        
+        
+        # i: index; state 1:  buy/cooldown --> True
+        #           state 2: sell/cooldown --> False
+        # bfs return maximum profit for each index
+        def dfs(i,state):  
+            if i>=len(prices):
+                return 0
+            
+            if (i,state) in dp:
+                return dp[(i,state)]
+            
+            if state==True:
+                buy = dfs(i+1,False) - prices[i]
+                cooldown = dfs(i+1,state)
+                dp[(i,state)] = max(buy,cooldown)
+            
+            else:  # state == False:
+                sell = dfs(i+2,True) + prices[i]
+                cooldown = dfs(i+1,state)
+                dp[(i,state)] = max(sell,cooldown)
+            
+            return dp[(i,state)]
+        
+        return dfs(0,True)
+
+
+714. Best Time to Buy and Sell Stock with Transaction Fee
+class Solution:
+    def maxProfit(self, prices: List[int], fee: int) -> int:
+                            # these two dp represents two states, and maximum profit at current index 
+        dp0 = 0              # state1: without stock at hand
+        dp1 = -float('inf')  # state2: with stock at hand, it has to be negative inf, since dp0-prices[i] can be negative
+        n=len(prices)
+        for i in range(n):
+            p = prices[i]
+            temp_dp0 = dp0
+            dp0 = max(dp0,dp1+prices[i]-fee)    # if we dont have stock in hand, that means last states can be no stock(dp0) or with stock(dp1) we want to sell the stock and minus fee. 
+            dp1 = max(dp1,temp_dp0-prices[i])        #
+            
+        return dp0
+
+42. Trapping Rain Water
+# the maximum level of water it can trap after the rain, which is equal to the minimum of maximum height of bars on both the sides minus its own height.
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        n = len(height)
+        left_max = [0 for i in range(n)]
+        right_max = [0 for i in range(n)]
+        
+        
+        for i in range(1,n):
+            left_max[i] = max(left_max[i-1],height[i-1])
+            right_max[n-1-i] = max(right_max[n-i],height[n-i])
+        
+        water=0
+        for i in range(n):
+            cur = min(left_max[i],right_max[i]) - height[i]
+            if cur < 0:
+                cur = 0
+            water+=cur
+        
+        return water
+
+
+
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        n = len(height)
+        left = 0
+        right = n-1
+        
+        left_max=height[left]
+        right_max =height[right]
+        res = 0 
+        
+        while left<right:
+            if left_max <= right_max:
+                left+=1
+                cur = left_max - height[left]
+                if cur>0:
+                    res += cur
+                left_max = max(left_max,height[left])      
+            else:
+                right-=1
+                cur = right_max - height[right]
+                if cur>0:
+                    res += cur
+                right_max= max(right_max,height[right])
+            
+        return res
+
+
+413. Arithmetic Slices
+class Solution:
+    def numberOfArithmeticSlices(self, nums: List[int]) -> int:
+        
+        n=len(nums)
+        count=0
+        for s in range(n-2):
+            d = nums[s+1]-nums[s]
+            for e in range(s+2,n):
+                if nums[e]-nums[e-1] == d:
+                    count+=1
+                else:
+                    break
+        
+        return count
+
+
+
+class Solution:
+    def numberOfArithmeticSlices(self, nums: List[int]) -> int:
+        
+        n = len(nums)
+        counts = 0
+        count = 0
+        
+        for e in range(2,n):
+            if nums[e]-nums[e-1] == nums[e-1]-nums[e-2]:
+                count+=1
+                counts += count
+            else:
+                count = 0
+                
+        return counts
+
+
+
+91. Decode Ways
+class Solution:
+    def numDecodings(self, s: str) -> int:
+        
+        dp = {}
+        dp[len(s)] = 1
+        
+        
+        def dfs(i):
+            
+            if i in dp:
+                return dp[i]
+            
+            if s[i] == '0':  # it cannot start with '0'
+                return 0
+            
+            res = dfs(i+1) 
+            
+            if (i+2 <= len(s)) and (s[i] =='1' or (s[i] == '2' and s[i+1] in '0123456') ) :
+                res += dfs(i+2)
+            
+            dp[i] = res
+            
+            return res
+        
+        return dfs(0)
+
+
+
+class Solution:
+    def numDecodings(self, s: str) -> int:
+        
+        dp1=1
+        dp2=1
+        
+        for i in range(len(s)-1,-1,-1):
+            
+            if s[i]=='0':
+                dp2 = dp1
+                dp1 = 0
+                continue
+            
+            temp = dp2
+            dp2 = dp1
+            
+            if i<len(s)-1 and (s[i]=='1' or (s[i]=='2' and s[i+1] in '0123456')):
+                dp1 = dp1+temp    
+        return dp1
+
+
+264. Ugly Number II
+#a positive integer whose factors are limited to 2, 3, and 5.
+class Solution:
+    def nthUglyNumber(self, n: int) -> int:
+        
+        uglys = [1]
+        
+        p2=0
+        p3=0
+        p5=0
+        
+        for i in range(n):
+            
+            temp = min(2*uglys[p2],3*uglys[p3],5*uglys[p5] )
+            uglys.append(temp)
+            
+            if temp == 2*uglys[p2]:
+                p2+=1
+            if temp == 3*uglys[p3]:
+                p3+=1
+                
+            if temp == 5*uglys[p5]:
+                p5+=1
+        
+        return uglys[n-1]
+
+
+96. Unique Binary Search Trees
+class Solution:
+    def numTrees(self, n: int) -> int:
+        
+        #tree_number[0] = 1
+        #tree_number[1] = 1
+        
+        tree_number = [1] * (n+1)
+        
+        for nodes in range(2,n+1):
+            
+            total= 0
+            for root in range(1,nodes+1):
+                left = root-1
+                right= nodes-root
+                total = total+ tree_number[left]*tree_number[right]
+            tree_number[nodes] = total
+            
+        
+        return tree_number[n]
+
+
+931. Minimum Falling Path Sum
+class Solution:
+    def minFallingPathSum(self, matrix: List[List[int]]) -> int:
+        
+        n= len(matrix)
+        
+        
+        for r in range(n-2,-1,-1):
+            for c in range(n):
+                res1 = matrix[r+1][c-1] if c-1>=0 else float('inf')
+                res2 = matrix[r+1][c]
+                res3 = matrix[r+1][c+1] if c+1<n else float('inf')
+                matrix[r][c] += min(res1,res2,res3)
+        
+        return min(matrix[0])
+
+
+
+5. Longest Palindromic Substring
+approach 1:
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        
+        
+        
+        
+        n = len(s)
+        dp = {} 
+        res = s[0]
+        max_len = 0
+        for end in range(n):
+            for start in range(end+1):
+                cur_len = end - start
+                if start == end:
+                    dp[(start,end)] = True
+                    
+                elif s[start] == s[end] and ( (start+1,end-1) in dp or cur_len == 1 ):
+                    dp[(start,end)] = True
+                    if cur_len > max_len:
+                        max_len = cur_len
+                        res = s[start:end+1]
+                
+                
+        
+        return res
+
+approach 2:
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        
+        
+        
+        
+        n = len(s)
+        max_len = 0
+        l_res = 0
+        r_res = 0
+        
+        for i in range(n):
+            
+            l = i
+            r = i
+            while l>=0 and r<n and s[l]==s[r]:
+                if r-l+1 > max_len:
+                    max_len = r-l+1
+                    l_res = l
+                    r_res = r
+                l-=1
+                r+=1
+            
+            l=i
+            r=i+1 
+            
+            while l>=0 and r<n and s[l]==s[r]:
+                if r-l+1 > max_len:
+                    max_len = r-l+1
+                    l_res = l
+                    r_res = r
+                l-=1
+                r+=1
+        return s[l_res:r_res+1]
